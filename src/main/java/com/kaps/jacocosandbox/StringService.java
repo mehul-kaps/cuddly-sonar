@@ -7,6 +7,7 @@ package com.kaps.jacocosandbox;
  */
 public class StringService {
 
+	public Integer counter = 9;
 	public static String getValue() {
 		return "Hello";
 	}
