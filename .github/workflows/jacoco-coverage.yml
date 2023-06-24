@@ -1,37 +1,17 @@
 name: Measure coverage
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
+on: pull_request
 
 jobs:
-  build:
-    permissions:
-      contents: 'write'
-      id-token: 'write'
-      issues: 'write'
-    
+  example_comment_pr:
     runs-on: ubuntu-latest
+    name: An example job to comment a PR
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-              
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
+        uses: actions/checkout@v3
+
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v2
         with:
-          distribution: 'adopt'
-          java-version: '17'
-          
-      - name: Run Coverage
-        run: mvn -B package -Pcoverage
-              
-      - name: Comment on PR with coverage percentages
-        if: ${{ github.event_name == 'pull_request' }}
-        run: |
-          gh pr comment ${{github.event.pull_request.number}} --body "Hedo SAI JaCoCo Test Coverage Summary Statistics"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+          message: |
+            Hello world ! :wave:
