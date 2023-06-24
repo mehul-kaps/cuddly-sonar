@@ -38,10 +38,11 @@ jobs:
       - name: Comment on PR with coverage percentages
         if: ${{ github.event_name == 'pull_request' }}
         run: |
-          ls -ltra badges/
-          cat badges/coverage-summary.json
-          sudo chmod +x badges/coverage-summary.json
-          REPORT=$(badges/coverage-summary.json)
+          #ls -ltra badges/
+          #cat badges/coverage-summary.json
+          #sudo chmod +x badges/coverage-summary.json
+          cd badges
+          REPORT=$(coverage-summary.json)
           COVERAGE=$(jq -r '.coverage' <<< "$REPORT")%
           BRANCHES=$(jq -r '.branches' <<< "$REPORT")%
           NEWLINE=$'\n'
