@@ -18,13 +18,32 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Run Coverage
-        run: mvn -B package --file pom.xml
-
-      - name: Add coverage to PR
+        run: mvn -B package -Pcoverage
+      - name: Generate JaCoCo badge
         id: jacoco
-        uses: madrapps/jacoco-report@v1.3
+        uses: cicirello/jacoco-badge-generator@v2
         with:
-          paths: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          min-coverage-overall: 40
-          min-coverage-changed-files: 60
+          badges-directory: badges
+          generate-branches-badge: true
+          generate-summary: true
+      - name: Log coverage percentages to workflow output
+        run: |
+          echo "coverage = ${{ steps.jacoco.outputs.coverage }}"
+          echo "branches = ${{ steps.jacoco.outputs.branches }}"
+      - name: Upload JaCoCo coverage report as a workflow artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/
+      - name: Comment on PR with coverage percentages
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          REPORT=$(<badges/coverage-summary.json)
+          COVERAGE=$(jq -r '.coverage' <<< "$REPORT")%
+          BRANCHES=$(jq -r '.branches' <<< "$REPORT")%
+          NEWLINE=$'\n'
+          BODY="## JaCoCo Test Coverage Summary Statistics${NEWLINE}* __Coverage:__ ${COVERAGE}${NEWLINE}* __Branches:__ ${BRANCHES}"
+          gh pr comment ${{github.event.pull_request.number}} -b "${BODY}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
