@@ -38,11 +38,7 @@ jobs:
       - name: Comment on PR with coverage percentages
         if: ${{ github.event_name == 'pull_request' }}
         run: |
-          COVERAGE='26.2%'
-          BRANCHES='100%'
-          NEWLINE=$'\n'
-          BODY="## JaCoCo Test Coverage Summary Statistics${NEWLINE}* __Coverage:__ ${COVERAGE}${NEWLINE}* __Branches:__ ${BRANCHES}"
-          gh pr comment ${{github.event.pull_request.number}} -b "${BODY}"
+          gh pr comment ${{github.event.pull_request.number}} --body "Hedo JaCoCo Test Coverage Summary Statistics"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
