@@ -16,11 +16,6 @@ public class SqsConfig {
                .region(Region.US_EAST_1)
                .credentialsProvider(() -> ProfileCredentialsProvider.create("default").resolveCredentials())
                .build();
-        		
-        
-        //return SqsClient.builder()
-                //.region(Region.US_EAST_1)
-                //.credentialsProvider(() -> AwsBasicCredentials.create("AKIA4SNHF4VLWV77NOFY", "EB0hNDYMqrQUGydG0EmAILNGb+k+qeNgtop5BAv2"))
-                //.build();
+        		        
     }
 }
